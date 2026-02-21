@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My socials :D</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tsparticles/2.12.0/tsparticles.bundle.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <style>
+        :root {
+            --foreground-rgb: 255, 255, 255;
+            --background-start-rgb: 0, 0, 0;
+            --background-end-rgb: 0, 0, 0;
+            --glow-pink: #ff66cc; 
+            --status-online: #23a55a;
+            --status-idle: #f0b232;
+            --status-dnd: #f23f43;
+            --status-offline: #80848e;
+        }
+
+        body {
+            color: rgb(var(--foreground-rgb));
+            background: black;
+            margin: 0;
+            font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+
+        .text-glow-pink {
+            color: var(--glow-pink);
+            text-shadow: 0 0 8px rgba(255, 102, 204, 0.6);
+            text-decoration: none;
+            transition: text-shadow 0.3s ease, opacity 0.3s ease;
+        }
+
+        .text-glow-pink:hover {
+            text-shadow: 0 0 15px rgba(255, 102, 204, 0.9);
+            opacity: 0.8;
+        }
+
+        .border-glow-pink {
+            border-color: var(--glow-pink);
+            box-shadow: 0 0 10px rgba(255, 102, 204, 0.4);
+        }
+
+        #tsparticles {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 0;
+        }
+
+        .glass-container {
+            z-index: 10;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .social-card {
+            background: rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .social-card:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .social-card:hover i, 
+        .social-card:hover span {
+            color: var(--glow-pink);
+            text-shadow: 0 0 8px rgba(255, 102, 204, 0.5);
+        }
+
+        #status-indicator {
+            position: absolute;
+            bottom: 4px;
+            right: 4px;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            border: 4px solid #000;
+            background-color: var(--status-offline);
+            transition: all 0.3s ease;
+            box-shadow: 0 0 12px rgba(0,0,0,0.8);
+        }
+
+        .status-pulse {
+            animation: status-glow 2s infinite;
+        }
+
+        @keyframes status-glow {
+            0% { box-shadow: 0 0 0 0 rgba(35, 165, 90, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(35, 165, 90, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(35, 165, 90, 0); }
+        }
+        
+        #discord-activity {
+            font-size: 0.85rem;
+            color: #e3e5e8;
+            margin-top: 6px;
+            min-height: 1.2rem;
+            text-align: center;
+            max-width: 280px;
+            font-weight: 500;
+        }
+
+        .activity-detail {
+            font-size: 0.75rem;
+            color: #b5bac1;
+            display: block;
+            margin-top: 2px;
+        }
+
+        #profile-img {
+            transition: opacity 0.3s ease;
+        }
+    </style>
+</head>
+<body class="flex min-h-screen flex-col items-center justify-center overflow-hidden">
+
+    <div id="tsparticles"></div>
+
+    <main class="z-10 px-6 py-10 glass-container rounded-lg max-w-2xl w-full mx-4">
+        <div class="flex flex-col items-center mb-6">
+            <div class="relative mb-4">
+                <img 
+                    id="profile-img"
+                    src="" 
+                    alt="Nickje2000's profile picture"
+                    class="rounded-full border-4 border-glow-pink w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 object-cover opacity-0"
+                    onerror="this.src='https://ui-avatars.com/api/?name=N&background=ff66cc&color=fff&size=128'; this.classList.remove('opacity-0');"
+                >
+                <div id="status-indicator"></div>
+            </div>
+            
+            <h1 class="text-4xl font-bold text-center">
+                <a href="https://discord.com/users/1403324959547461692" target="_blank" rel="noopener noreferrer" class="text-glow-pink inline-block">
+                    Nickje2000
+                </a>
+            </h1>
+            <div id="discord-activity">Connecting...</div>
+        </div>
+
+        <p class="text-center text-white mb-8 leading-relaxed">
+            Hello, and welcome to my landing page!
+            <br />
+            My name is Nick, and I am an enthusiastic coder :D
+            <br />
+            I mainly code LUA, Python and C++, but sometimes I use something new like HTML!
+            <br />
+            If you need to contact me, do so on Discord.
+            <br />
+            Have a nice day!
+        </p>
+
+        <div class="grid grid-cols-2 gap-6 sm:grid-cols-4">
+            <a href="https://github.com/nickje2000" target="_blank" rel="noopener noreferrer" class="social-card flex flex-col items-center justify-center p-4 rounded-lg group">
+                <i data-lucide="github" class="w-8 h-8 mb-2 text-white transition-colors duration-300"></i>
+                <span class="text-sm font-medium text-white transition-colors duration-300">GitHub</span>
+            </a>
+            
+            <a href="https://discord.com/users/1403324959547461692" target="_blank" rel="noopener noreferrer" class="social-card flex flex-col items-center justify-center p-4 rounded-lg group">
+                <i data-lucide="message-square" class="w-8 h-8 mb-2 text-white transition-colors duration-300"></i>
+                <span class="text-sm font-medium text-white transition-colors duration-300">Discord</span>
+            </a>
+
+            <a href="https://steamcommunity.com/id/nickje2000" target="_blank" rel="noopener noreferrer" class="social-card flex flex-col items-center justify-center p-4 rounded-lg group">
+                <i data-lucide="gamepad-2" class="w-8 h-8 mb-2 text-white transition-colors duration-300"></i>
+                <span class="text-sm font-medium text-white transition-colors duration-300">Steam</span>
+            </a>
+
+            <a href="https://play.qobuz.com/playlist/37989910" target="_blank" rel="noopener noreferrer" class="social-card flex flex-col items-center justify-center p-4 rounded-lg group">
+                <i data-lucide="music" class="w-8 h-8 mb-2 text-white transition-colors duration-300"></i>
+                <span class="text-sm font-medium text-white transition-colors duration-300">Qobuz</span>
+            </a>
+        </div>
+    </main>
+
+    <script>
+        lucide.createIcons();
+
+        const DISCORD_ID = "1403324959547461692";
+        const statusEl = document.getElementById('status-indicator');
+        const activityEl = document.getElementById('discord-activity');
+        const profileImg = document.getElementById('profile-img');
+
+        async function fetchWithRetry(url, options = {}, retries = 5, backoff = 1000) {
+            try {
+                const response = await fetch(url, options);
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                return await response.json();
+            } catch (error) {
+                if (retries > 0) {
+                    await new Promise(resolve => setTimeout(resolve, backoff));
+                    return fetchWithRetry(url, options, retries - 1, backoff * 2);
+                }
+                throw error;
+            }
+        }
+
+        async function fetchDiscordStatus() {
+            try {
+                const result = await fetchWithRetry(`https://api.lanyard.rest/v1/users/${DISCORD_ID}`);
+                const data = result.data;
+
+                if (data.discord_user && data.discord_user.avatar) {
+                    const avatarUrl = `https://cdn.discordapp.com/avatars/${DISCORD_ID}/${data.discord_user.avatar}.png?size=512`;
+                    if (profileImg.src !== avatarUrl) {
+                        profileImg.src = avatarUrl;
+                        profileImg.onload = () => profileImg.classList.remove('opacity-0');
+                    }
+                } else {
+                    profileImg.classList.remove('opacity-0');
+                }
+
+                const statusColors = {
+                    online: 'var(--status-online)',
+                    idle: 'var(--status-idle)',
+                    dnd: 'var(--status-dnd)',
+                    offline: 'var(--status-offline)'
+                };
+                statusEl.style.backgroundColor = statusColors[data.discord_status] || statusColors.offline;
+                
+                if (data.discord_status === 'online') {
+                    statusEl.classList.add('status-pulse');
+                } else {
+                    statusEl.classList.remove('status-pulse');
+                }
+
+                let mainActivity = "";
+                let detailText = "";
+
+                if (data.listening_to_spotify) {
+                    mainActivity = `Listening to ${data.spotify.song}`;
+                    detailText = `by ${data.spotify.artist}`;
+                } else if (data.activities && data.activities.length > 0) {
+                    const game = data.activities.find(a => a.type === 0);
+                    const custom = data.activities.find(a => a.type === 4);
+                    
+                    if (game) {
+                        mainActivity = `Playing ${game.name}`;
+                        detailText = game.details || game.state || "";
+                    } else if (custom) {
+                        mainActivity = custom.state || "Custom Status";
+                        detailText = custom.emoji ? `${custom.emoji.name} ` : "";
+                    } else {
+                        mainActivity = data.activities[0].name;
+                    }
+                } else {
+                    mainActivity = data.discord_status.charAt(0).toUpperCase() + data.discord_status.slice(1);
+                }
+
+                activityEl.innerHTML = `
+                    <span>${mainActivity}</span>
+                    ${detailText ? `<span class="activity-detail">${detailText}</span>` : ''}
+                `;
+
+            } catch (err) {
+                console.error("Lanyard Error:", err);
+                activityEl.innerText = "Offline";
+                statusEl.style.backgroundColor = 'var(--status-offline)';
+                profileImg.classList.remove('opacity-0');
+            }
+        }
+
+        fetchDiscordStatus();
+        setInterval(fetchDiscordStatus, 30000);
+
+        tsParticles.load("tsparticles", {
+            fpsLimit: 120,
+            interactivity: {
+                events: {
+                    onClick: { enable: true, mode: "push" },
+                    onHover: { enable: true, mode: "repulse" },
+                    resize: true,
+                },
+                modes: {
+                    push: { quantity: 4 },
+                    repulse: { distance: 66, duration: 0.4 },
+                },
+            },
+            particles: {
+                color: { value: "#ffffff" },
+                links: {
+                    color: "#ffffff",
+                    distance: 150,
+                    enable: true,
+                    opacity: 0.2,
+                    width: 1,
+                },
+                move: {
+                    direction: "none",
+                    enable: true,
+                    outModes: { default: "bounce" },
+                    random: false,
+                    speed: 1.2,
+                    straight: false,
+                },
+                number: {
+                    density: { enable: true, area: 800 },
+                    value: 50,
+                },
+                opacity: { value: 0.3 },
+                shape: { type: "circle" },
+                size: { value: { min: 1, max: 3 } },
+            },
+            detectRetina: true,
+            background: {
+                color: "#000000"
+            }
+        });
+    </script>
+</body>
+</html>
