@@ -106,21 +106,49 @@
             100% { box-shadow: 0 0 0 0 rgba(35, 165, 90, 0); }
         }
         
+        #discord-activity-container {
+            display: inline-flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            margin-top: 16px;
+            max-width: 90%;
+            background: rgba(255, 255, 255, 0.03);
+            padding: 12px 20px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        #activity-image {
+            width: 60px;
+            height: 60px;
+            border-radius: 8px;
+            object-fit: cover;
+            display: none;
+            flex-shrink: 0;
+        }
+
+        .activity-text-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            text-align: left;
+        }
+
         #discord-activity {
             font-size: 0.85rem;
             color: #e3e5e8;
-            margin-top: 6px;
-            min-height: 1.2rem;
-            text-align: center;
-            max-width: 280px;
-            font-weight: 500;
+            font-weight: 700;
+            white-space: nowrap;
         }
 
         .activity-detail {
             font-size: 0.75rem;
             color: #b5bac1;
             display: block;
-            margin-top: 2px;
+            margin-top: 1px;
+            white-space: nowrap;
         }
 
         #profile-img {
@@ -194,8 +222,8 @@
 
     <div id="tsparticles"></div>
 
-    <main class="z-10 px-4 py-8 sm:px-6 sm:py-10 glass-container rounded-lg max-w-2xl w-full">
-        <div class="flex flex-col items-center mb-6">
+    <main class="z-10 px-4 py-8 sm:px-6 sm:py-10 glass-container rounded-lg max-w-2xl w-full flex flex-col items-center">
+        <div class="flex flex-col items-center mb-6 w-full">
             <div class="relative mb-4">
                 <img 
                     id="profile-img"
@@ -212,7 +240,13 @@
                     Nickje2000
                 </a>
             </h1>
-            <div id="discord-activity">Connecting...</div>
+            
+            <div id="discord-activity-container">
+                <img id="activity-image" src="" alt="">
+                <div class="activity-text-wrapper">
+                    <div id="discord-activity">Connecting...</div>
+                </div>
+            </div>
         </div>
 
         <p class="text-center text-white mb-8 leading-relaxed text-sm sm:text-base">
@@ -227,7 +261,7 @@
             Have a nice day!
         </p>
 
-        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6 mb-8">
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6 mb-8 w-full">
             <a href="https://github.com/nickje2000" target="_blank" rel="noopener noreferrer" class="social-card flex flex-col items-center justify-center p-4 rounded-lg group">
                 <i data-lucide="github" class="w-6 h-6 sm:w-8 sm:h-8 mb-2 text-white transition-colors duration-300"></i>
                 <span class="text-xs sm:text-sm font-medium text-white transition-colors duration-300">GitHub</span>
@@ -249,7 +283,7 @@
             </a>
         </div>
 
-        <div class="flex flex-col items-center gap-6">
+        <div class="flex flex-col items-center gap-6 w-full">
             <button onclick="openModal()" class="social-card flex items-center gap-2 px-8 py-3 rounded-lg text-white font-medium group border border-white/5 w-full sm:w-auto justify-center">
                 <i data-lucide="code-2" class="w-5 h-5 transition-colors duration-300 group-hover:text-[#ff66cc]"></i>
                 <span class="transition-colors duration-300 group-hover:text-[#ff66cc]">My Projects</span>
@@ -291,7 +325,9 @@
         const DISCORD_ID = "1403324959547461692";
         const GITHUB_USER = "nickje2000";
         const statusEl = document.getElementById('status-indicator');
+        const activityWrapper = document.getElementById('discord-activity-container');
         const activityEl = document.getElementById('discord-activity');
+        const activityImg = document.getElementById('activity-image');
         const profileImg = document.getElementById('profile-img');
         const modal = document.getElementById('projects-modal');
         const repoList = document.getElementById('repo-list');
@@ -352,6 +388,14 @@
             }
         }
 
+        function getDiscordAsset(appId, assetId) {
+            if (!assetId) return null;
+            if (assetId.startsWith('mp:external/')) {
+                return `https://media.discordapp.net/external/${assetId.replace('mp:external/', '')}`;
+            }
+            return `https://cdn.discordapp.com/app-assets/${appId}/${assetId}.png`;
+        }
+
         async function fetchDiscordStatus() {
             try {
                 const result = await fetchWithRetry(`https://api.lanyard.rest/v1/users/${DISCORD_ID}`);
@@ -380,24 +424,36 @@
 
                 let mainActivity = "";
                 let detailText = "";
+                let imageUrl = "";
 
                 if (data.listening_to_spotify) {
-                    mainActivity = `Listening to ${data.spotify.song}`;
+                    mainActivity = data.spotify.song;
                     detailText = `by ${data.spotify.artist}`;
+                    imageUrl = data.spotify.album_art_url;
                 } else if (data.activities && data.activities.length > 0) {
-                    const game = data.activities.find(a => a.type === 0);
-                    const custom = data.activities.find(a => a.type === 4);
-                    if (game) {
-                        mainActivity = `Playing ${game.name}`;
-                        detailText = game.details || game.state || "";
-                    } else if (custom) {
-                        mainActivity = custom.state || "Custom Status";
-                        detailText = custom.emoji ? `${custom.emoji.name} ` : "";
-                    } else {
-                        mainActivity = data.activities[0].name;
+                    const musicAct = data.activities.find(a => ["YouTube Music", "Apple Music", "Music"].includes(a.name));
+                    const gameAct = data.activities.find(a => a.type === 0);
+                    const customAct = data.activities.find(a => a.type === 4);
+
+                    const act = musicAct || gameAct || customAct || data.activities[0];
+                    
+                    mainActivity = act.name === "Custom Status" ? (act.state || "") : act.name;
+                    detailText = act.details || act.state || "";
+                    
+                    if (act.assets && act.assets.large_image) {
+                        imageUrl = getDiscordAsset(act.application_id, act.assets.large_image);
+                    } else if (act.emoji && act.name === "Custom Status") {
+                        mainActivity = `${act.emoji.name} ${act.state || ""}`;
                     }
                 } else {
                     mainActivity = data.discord_status.charAt(0).toUpperCase() + data.discord_status.slice(1);
+                }
+
+                if (imageUrl) {
+                    activityImg.src = imageUrl;
+                    activityImg.style.display = 'block';
+                } else {
+                    activityImg.style.display = 'none';
                 }
 
                 activityEl.innerHTML = `<span>${mainActivity}</span>${detailText ? `<span class="activity-detail">${detailText}</span>` : ''}`;
@@ -406,6 +462,7 @@
                 activityEl.innerText = "Offline";
                 statusEl.style.backgroundColor = 'var(--status-offline)';
                 profileImg.classList.remove('opacity-0');
+                activityImg.style.display = 'none';
             }
         }
 
